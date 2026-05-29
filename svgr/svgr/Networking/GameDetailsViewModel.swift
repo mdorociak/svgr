@@ -33,7 +33,7 @@ class GameDetailsViewModel {
     }
     
     func fetchPrediction(appid: Int) async {
-        let ownedIds = cacheService.ownedGames().map(\.appid)
+        let ownedIds = cacheService.recommendableOwnedGameIDs()
         
         guard !ownedIds.isEmpty else {
             predictionState = .error("No owned games to compare to.")

@@ -22,7 +22,7 @@ struct ProfileScreen: View {
                         "Error",
                         systemImage: "exclamationmark.triangle",
                         description: Text(message)
-                    ) 
+                    )
                 }
             }
             .navigationTitle("Profile")

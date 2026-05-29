@@ -35,13 +35,35 @@ private struct OwnedGamesList: View {
     let cacheService: CacheService
     
     var body: some View {
-        let games = entries.compactMap { $0.toDomain() }
-        StaticGamesList(
-            games: games,
-            emptyState: ("No Games", "gamecontroller", "Your owned games will appear here"),
-            steamService: steamService,
-            cacheService: cacheService
-        )
+        List {
+            ForEach(entries) { entry in
+                if let game = entry.toDomain() {
+                    NavigationLink(value: game) {
+                        GameRow(game: game)
+                            .opacity(entry.excludedFromRecommendations ? 0.5 : 1.0)
+                    }
+                    .swipeActions(edge: .trailing) {
+                        Button {
+                            cacheService.setExcludedFromRecommendations(
+                                game.appid,
+                                excluded: !entry.excludedFromRecommendations
+                            )
+                        } label: {
+                            if entry.excludedFromRecommendations {
+                                Label("Include", systemImage: "checkmark.circle")
+                            } else {
+                                Label("Exclude", systemImage: "minus.circle")
+                            }
+                        }
+                        .tint(entry.excludedFromRecommendations ? .green : .orange)
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .navigationDestination(for: Game.self) { game in
+            GameDetailsScreen(game: game, steamService: steamService, cacheService: cacheService)
+        }
     }
 }
 

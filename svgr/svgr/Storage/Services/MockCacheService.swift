@@ -9,6 +9,7 @@ final class MockCacheService: CacheService, @unchecked Sendable {
     var _recommendations: [Game] = []
     var _profiles: [String: Profile] = [:]
     var _details: [Int: GameDetails] = [:]
+    var _excluded: Set<Int> = []
     
     var setOwnedGamesCallCount = 0
     var setRecommendationsCallCount = 0
@@ -18,6 +19,10 @@ final class MockCacheService: CacheService, @unchecked Sendable {
     
     func ownedGames() -> [Game] {
         Array(_owned.values).sorted { $0.name < $1.name }
+    }
+    
+    func recommendableOwnedGameIDs() -> [Int] {
+        _owned.keys.filter { !_excluded.contains($0) }
     }
     
     func wishlistedGames() -> [Game] {
@@ -44,6 +49,14 @@ final class MockCacheService: CacheService, @unchecked Sendable {
     func setOwnedGames(_ games: [Game]) {
         setOwnedGamesCallCount += 1
         _owned = Dictionary(uniqueKeysWithValues: games.map { ($0.appid, $0) })
+    }
+    
+    func setExcludedFromRecommendations(_ appid: Int, excluded: Bool) {
+        if excluded {
+            _excluded.insert(appid)
+        } else {
+            _excluded.remove(appid)
+        }
     }
     
     func setRecommendations(_ games: [Game]) {
@@ -93,6 +106,7 @@ final class MockCacheService: CacheService, @unchecked Sendable {
         _recommendations.removeAll()
         _profiles.removeAll()
         _details.removeAll()
+        _excluded.removeAll()
     }
 }
 

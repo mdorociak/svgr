@@ -21,10 +21,10 @@ class RecommendationViewModel {
     }
     
     func refreshRecommendations() async {
-        let ownedIDs = cacheService.ownedGames().map(\.appid)
+        let ownedIDs = cacheService.recommendableOwnedGameIDs()
         
         guard !ownedIDs.isEmpty else {
-            state = .error("No owned games to base recommendations on.")
+            state = .error("No games selected to base recommendations on.")
             return
         }
         

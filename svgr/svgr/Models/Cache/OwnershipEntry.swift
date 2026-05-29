@@ -5,6 +5,7 @@ import SwiftData
 @Model
 final class OwnershipEntry {
     var game: GameEntity?
+    var excludedFromRecommendations: Bool = false
     
     var playtime: Int
     var playtime2Weeks: Int?

@@ -295,7 +295,7 @@ struct RecommendationViewModelTests {
         
         await viewModel.refreshRecommendations()
         
-        #expect(viewModel.state.error == "No owned games to base recommendations on.")
+        #expect(viewModel.state.error == "No games selected to base recommendations on.")
         #expect(cache.setRecommendationsCallCount == 0)
     }
     

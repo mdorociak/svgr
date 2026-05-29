@@ -56,6 +56,18 @@ final class DefaultCacheService: CacheService {
         }
     }
     
+    func recommendableOwnedGameIDs() -> [Int] {
+        let descriptor = FetchDescriptor<OwnershipEntry>(
+            predicate: #Predicate { $0.excludedFromRecommendations == false }
+        )
+        do {
+            return try modelContext.fetch(descriptor).compactMap { $0.game?.appid }
+        } catch {
+            Logger.cache.error("Failed to fetch recommendable game IDs: \(error.localizedDescription, privacy: .public)")
+            return []
+        }
+    }
+    
     func isOwned(_ appid: Int) -> Bool {
         let descriptor = FetchDescriptor<OwnershipEntry>(
             predicate: #Predicate { $0.game?.appid == appid }
@@ -118,6 +130,19 @@ final class DefaultCacheService: CacheService {
             try modelContext.save()
         } catch {
             Logger.cache.error("Failed to set owned games: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+    
+    func setExcludedFromRecommendations(_ appid: Int, excluded: Bool) {
+        let descriptor = FetchDescriptor<OwnershipEntry>(
+            predicate: #Predicate { $0.game?.appid == appid }
+        )
+        do {
+            guard let entry = try modelContext.fetch(descriptor).first else { return }
+            entry.excludedFromRecommendations = excluded
+            try modelContext.save()
+        } catch {
+            Logger.cache.error("Failed to set exclusion for appid \(appid): \(error.localizedDescription, privacy: .public)")
         }
     }
     
