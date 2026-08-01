@@ -77,6 +77,31 @@ struct SearchResponseDTO: Codable {
     let results: [SearchResultDTO]
 }
 
+struct OwnedGameDTO: Codable {
+    let appid: Int
+    let playtime: Int
+}
+
+struct RecommendationRequestDTO: Encodable {
+    let ownedGames: [Int: Int]
+    let topK: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case ownedGames = "owned_games"
+        case topK = "top_k"
+    }
+}
+
+struct PredictionRequestDTO: Encodable {
+    let ownedGameIDs: [Int]
+    let targetGameID: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case ownedGameIDs = "owned_game_ids"
+        case targetGameID = "target_game_id"
+    }
+}
+
 struct RecommendationResponseDTO: Codable {
     let recommendations: [RecommendedGameDTO]
 }

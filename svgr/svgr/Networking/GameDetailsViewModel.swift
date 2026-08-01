@@ -33,9 +33,9 @@ class GameDetailsViewModel {
     }
     
     func fetchPrediction(appid: Int) async {
-        let ownedIds = cacheService.recommendableOwnedGameIDs()
+        let ownedIDs = Array(cacheService.recommendableOwnedGames().keys)
         
-        guard !ownedIds.isEmpty else {
+        guard !ownedIDs.isEmpty else {
             predictionState = .error("No owned games to compare to.")
             return
         }
@@ -43,7 +43,7 @@ class GameDetailsViewModel {
         predictionState = .loading
         
         do {
-            let result = try await steamService.predictGame(ownedGamesIds: ownedIds, targetGameId: appid)
+            let result = try await steamService.predictGame(ownedGamesIDs: ownedIDs, targetGameID: appid)
             predictionState = .loaded(result)
         } catch {
             predictionState = .error("Unable to predict.")

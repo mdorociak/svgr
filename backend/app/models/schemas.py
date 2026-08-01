@@ -56,7 +56,7 @@ class SearchResponse(BaseModel):
     results: List[SearchResult]
 
 class RecommendationRequest(BaseModel):
-    owned_game_ids: List[int]
+    owned_games: dict[int, int]
     top_k: int = 20
 
 class RecommendedGame(BaseModel):

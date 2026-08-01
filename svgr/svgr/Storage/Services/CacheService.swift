@@ -6,7 +6,7 @@ protocol CacheService {
     func ownedGames() -> [Game]
     func wishlistedGames() -> [Game]
     func recommendedGames() -> [Game]
-    func recommendableOwnedGameIDs() -> [Int]
+    func recommendableOwnedGames() -> [Int: Int]
     
     func isOwned(_ appid: Int) -> Bool
     func isWishlisted(_ appid: Int) -> Bool

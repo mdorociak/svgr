@@ -21,8 +21,12 @@ final class MockCacheService: CacheService, @unchecked Sendable {
         Array(_owned.values).sorted { $0.name < $1.name }
     }
     
-    func recommendableOwnedGameIDs() -> [Int] {
-        _owned.keys.filter { !_excluded.contains($0) }
+    func recommendableOwnedGames() -> [Int: Int] {
+        var result: [Int: Int] = [:]
+        for (appid, game) in _owned where !_excluded.contains(appid) {
+            result[appid] = game.playtime ?? 0
+        }
+        return result
     }
     
     func wishlistedGames() -> [Game] {

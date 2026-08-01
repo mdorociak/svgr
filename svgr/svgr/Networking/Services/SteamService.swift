@@ -1,4 +1,3 @@
-
 import Foundation
 
 protocol SteamService: Sendable {
@@ -7,6 +6,6 @@ protocol SteamService: Sendable {
     func getGames(steamId: String) async throws -> [Game]
     func getGameDetails(appId: Int) async throws -> GameDetails
     func searchGames(for term: String, page: Int) async throws -> [Game]
-    func getRecommendations(ownedGamesIds: [Int], topK: Int) async throws -> [Game]
-    func predictGame(ownedGamesIds:[Int], targetGameId: Int) async throws -> PredictionResult
+    func getRecommendations(ownedGames: [Int: Int], topK: Int) async throws -> [Game]
+    func predictGame(ownedGamesIDs:[Int], targetGameID: Int) async throws -> PredictionResult
 }

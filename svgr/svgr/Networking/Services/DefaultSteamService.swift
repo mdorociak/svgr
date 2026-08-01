@@ -1,4 +1,3 @@
-
 import Foundation
 
 final class DefaultSteamService: SteamService, Sendable {
@@ -15,7 +14,7 @@ final class DefaultSteamService: SteamService, Sendable {
     }
     
     func getProfile(steamId: String) async throws -> Profile {
-        let dto:ProfileDTO = try await get(endpoint: APIConstants.Endpoints.profile(steamID: steamId))
+        let dto: ProfileDTO = try await get(endpoint: APIConstants.Endpoints.profile(steamID: steamId))
         return dto.toDomain()
     }
     
@@ -34,18 +33,20 @@ final class DefaultSteamService: SteamService, Sendable {
         return dto.results.map { $0.toDomain() }
     }
    
-    func getRecommendations(ownedGamesIds: [Int], topK: Int = 20) async throws -> [Game] {
+    func getRecommendations(ownedGames: [Int: Int], topK: Int = 20) async throws -> [Game] {
+        let body = RecommendationRequestDTO(ownedGames: ownedGames, topK: topK)
         let dto: RecommendationResponseDTO = try await post(
             endpoint: APIConstants.Endpoints.recommendations,
-            body: ["owned_game_ids": ownedGamesIds, "top_k": topK]
+            body: body
         )
         return dto.recommendations.map { $0.toDomain() }
     }
     
-    func predictGame(ownedGamesIds: [Int], targetGameId: Int) async throws -> PredictionResult {
+    func predictGame(ownedGamesIDs: [Int], targetGameID: Int) async throws -> PredictionResult {
+        let body = PredictionRequestDTO(ownedGameIDs: ownedGamesIDs, targetGameID: targetGameID)
         let dto: PredictionResponseDTO = try await post(
             endpoint: APIConstants.Endpoints.predict,
-            body: ["owned_game_ids": ownedGamesIds, "target_game_id": targetGameId]
+            body: body
         )
         return dto.toDomain()
     }
@@ -56,16 +57,23 @@ final class DefaultSteamService: SteamService, Sendable {
         return try await performRequest(URLRequest(url: url))
     }
     
-    private func post<T: Decodable>(endpoint: String, body: [String: Any] = [:]) async throws -> T {
+    private func post<T: Decodable, Body: Encodable>(endpoint: String, body: Body) async throws -> T {
+        var request = try makePostRequest(endpoint: endpoint)
+        request.httpBody = try JSONEncoder().encode(body)
+        return try await performRequest(request)
+    }
+    
+    private func post<T: Decodable>(endpoint: String) async throws -> T {
+        let request = try makePostRequest(endpoint: endpoint)
+        return try await performRequest(request)
+    }
+    
+    private func makePostRequest(endpoint: String) throws -> URLRequest {
         let url = try buildURL(endpoint: endpoint)
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        if !body.isEmpty {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        }
-        return try await performRequest(request)
+        return request
     }
     
     private func buildURL(endpoint: String) throws -> URL {
@@ -101,3 +109,4 @@ final class DefaultSteamService: SteamService, Sendable {
         }
     }
 }
+

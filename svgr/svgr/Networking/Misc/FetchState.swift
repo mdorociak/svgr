@@ -8,7 +8,7 @@ enum FetchState: Equatable {
     case error(String)
     
     var isLoading: Bool {
-        if case .loaded = self { return true }
+        if case .loading = self { return true }
         return false
     }
     

@@ -23,3 +23,4 @@ enum LoadingState<T: Equatable>: Equatable {
         return nil
     }
 }
+

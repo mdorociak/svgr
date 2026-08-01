@@ -56,15 +56,22 @@ final class DefaultCacheService: CacheService {
         }
     }
     
-    func recommendableOwnedGameIDs() -> [Int] {
+    func recommendableOwnedGames() -> [Int: Int] {
         let descriptor = FetchDescriptor<OwnershipEntry>(
             predicate: #Predicate { $0.excludedFromRecommendations == false }
         )
         do {
-            return try modelContext.fetch(descriptor).compactMap { $0.game?.appid }
+            let entries = try modelContext.fetch(descriptor)
+            var result: [Int: Int] = [:]
+            for entry in entries {
+                if let appid = entry.game?.appid {
+                    result[appid] = entry.playtime
+                }
+            }
+            return result
         } catch {
             Logger.cache.error("Failed to fetch recommendable game IDs: \(error.localizedDescription, privacy: .public)")
-            return []
+            return [:]
         }
     }
     

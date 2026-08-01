@@ -14,7 +14,7 @@ final class LoginViewModel {
     var steamId: String? {
         Keychain.get(.steamId)
     }
-    
+
     init(steamService: SteamService) {
         self.steamService = steamService
         self.isAuthenticated = Keychain.get(.steamId) != nil

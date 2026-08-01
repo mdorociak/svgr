@@ -1,4 +1,3 @@
-
 import Foundation
 
 @Observable
@@ -21,9 +20,9 @@ class RecommendationViewModel {
     }
     
     func refreshRecommendations() async {
-        let ownedIDs = cacheService.recommendableOwnedGameIDs()
+        let ownedGames = cacheService.recommendableOwnedGames()
         
-        guard !ownedIDs.isEmpty else {
+        guard !ownedGames.isEmpty else {
             state = .error("No games selected to base recommendations on.")
             return
         }
@@ -32,7 +31,10 @@ class RecommendationViewModel {
         state = .loading
         
         do {
-            let games = try await steamService.getRecommendations(ownedGamesIds: ownedIDs, topK: 20)
+            let games = try await steamService.getRecommendations(
+                ownedGames: ownedGames,
+                topK: 20
+            )
             cacheService.setRecommendations(games)
             state = .loaded
         } catch {

@@ -18,15 +18,14 @@ async def get_recommendations(
     rec_service: RecommendationService = Depends(get_recommendation_service),
     steam_service: SteamService = Depends(get_steam_service)
 ):
-    
-    if not request.owned_game_ids:
-        raise HTTPException(status_code=400, detail="owned_game_ids cannot be empty")
+    if not request.owned_games:
+        raise HTTPException(status_code=400, detail="owned_games cannot be empty")
     
     if request.top_k < 1 or request.top_k > 100:
         raise HTTPException(status_code=400, detail="top_k must be between 1 and 100")
     
     recommendations = rec_service.get_recommendations(
-        owned_game_ids=request.owned_game_ids,
+        owned_games=request.owned_games,
         top_k=request.top_k
     )
 

@@ -40,12 +40,12 @@ final class MockSteamService: SteamService, @unchecked Sendable {
         return try searchGamesResult.get()
     }
     
-    func getRecommendations(ownedGamesIds: [Int], topK: Int) async throws -> [Game] {
+    func getRecommendations(ownedGames: [Int: Int], topK: Int) async throws -> [Game] {
         try await delay()
         return try recommendationsResult.get()
     }
     
-    func predictGame(ownedGamesIds: [Int], targetGameId: Int) async throws -> PredictionResult {
+    func predictGame(ownedGamesIDs: [Int], targetGameID: Int) async throws -> PredictionResult {
         try await delay()
         return try predictGameResult.get()
     }
