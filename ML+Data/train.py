@@ -27,7 +27,7 @@ CFG = dict(
     min_owners=10,
     neg_ratio=2,
     neg_alpha=0.5,
-    balance_tail_negatives=True,
+    balance_tail_negatives=False,
 
     warm_holdout=0.02,
 

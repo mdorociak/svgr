@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     steam_openid_url: str = "https://steamcommunity.com/openid/login"
     steam_api_base: str = "https://api.steampowered.com"
 
+    model_path: str = "profile_neumf.pkl"
+
     class Config:
         env_file = ".env"
         case_sensitive = False

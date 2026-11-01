@@ -57,3 +57,12 @@ Desktop.ini
 .vscode/
 *.swp
 *~
+
+# === Data (user libraries are personal data: keep them out of the repo) ===
+*.csv
+*.jsonl
+*.parquet
+ML+Data/appids.txt
+ML+Data/queue.json
+ML+Data/api_budget.json
+ML+Data/training_curves.png

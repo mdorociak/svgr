@@ -44,3 +44,14 @@ Owned games, wishlist, and recommendations all persist on device, so the app ope
 - Built a profile screen with computed library stats and a persisted theme preference.
 - Wrote unit tests covering every view model's state transitions, using injected mocks for the service and cache layers.
 - Built a SwiftUI preview system with reusable fixtures, mock services, and in-memory `ModelContainer` factories — every component is previewable in isolation.
+
+---
+
+## Recommendation model
+
+The model, its data pipeline and its evaluation live in [`ML+Data/`](ML+Data/README.md).
+
+It is a hybrid PyTorch recommender (collaborative filtering + content features) for cold-start users. On held-out users, ranking against the full 17,430-game catalogue, it reaches **NDCG@10 0.312 and Recall@10 0.281**, against 0.250 and 0.221 for recommending the most popular games.
+
+The backend serves it from `profile_neumf.pkl`; see `ML+Data/README.md` for how to rebuild the data and retrain.
+
